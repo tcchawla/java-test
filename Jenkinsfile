@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent {label slave}
 
     environment {
         function_name = 'java-sample'
@@ -10,6 +10,13 @@ pipeline {
             steps {
                 echo 'Build'
                 sh 'mvn package'
+            }
+        }
+
+        stage('Sonar Analysis') {
+            steps {
+                echo 'Sonar Analysis'
+                sh 'mvn sonar:sonar'
             }
         }
 
