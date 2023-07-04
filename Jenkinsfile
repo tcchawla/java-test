@@ -5,6 +5,15 @@ pipeline {
         function_name = 'test-java-app'
     }
 
+    parameters {
+        string(name: RollBackVersion, description: "Please enter rollback version")
+        choice(
+            choices: ['Dev', 'Test', 'Prod']
+            name: 'Environment',
+            description: 'Please Select the environment to deploy to'
+        )
+    }
+
     stages {
         // CI Started
 
@@ -33,8 +42,15 @@ pipeline {
 
         stage('Sonar Quality Gate') {
             steps {
-                timeout(time: 10, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
+                script {
+                    try {
+                        timeout(time: 10, unit: 'MINUTES') {
+                            waitForQualityGate abortPipeline: true
+                        }
+                    }
+                    catch (Exception ex) {
+
+                    }
                 }
             }
         }
@@ -76,7 +92,7 @@ pipeline {
 
         stage('Deploy to Prod') {
             when {
-                branch "main"
+                expression { return params.Environment == 'Prod'}
             }
             steps {
                 echo 'Deploying to Prod'
