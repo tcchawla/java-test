@@ -107,7 +107,7 @@ pipeline {
                 echo "${BUILD_NUMBER}"
                 echo "${JENKINS_URL}"
             }
-            failue {
+            failure {
                 echo "Failed to execute"
                 mail(to:"tc.chawla2000@gmail.com", body:"This build failed. Please try again", subject:"Build Failure")
             }
