@@ -2,7 +2,7 @@ pipeline {
     agent {label 'slave'}
 
     environment {
-        function_name = 'java-sample'
+        function_name = 'test-java-app'
     }
 
     stages {
