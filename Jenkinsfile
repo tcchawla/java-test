@@ -14,10 +14,26 @@ pipeline {
         }
 
         stage('Sonar Analysis') {
+            agent {label 'master'}
+            when {
+                anyOf {
+                    branch "feature/*"
+                    branch "main"
+                }
+            }
+
             steps {
                 echo 'Sonar Analysis'
                 withSonarQubeEnv('Sonar') {
                     sh 'mvn sonar:sonar'
+                }
+            }
+        }
+
+        stage('Sonar Quality Gate') {
+            steps {
+                timeout(time:10, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
                 }
             }
         }
