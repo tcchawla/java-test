@@ -16,7 +16,7 @@ pipeline {
         stage('Sonar Analysis') {
             steps {
                 echo 'Sonar Analysis'
-                sh "mvn sonar:sonar"
+                sh '''mvn sonar:sonar'''
             }
         }
 
