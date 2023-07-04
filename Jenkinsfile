@@ -8,7 +8,7 @@ pipeline {
     parameters {
         string(name: RollBackVersion, description: "Please enter rollback version")
         choice(
-            choices: ['Dev', 'Test', 'Prod']
+            choices: ['Dev', 'Test', 'Prod'],
             name: 'Environment',
             description: 'Please Select the environment to deploy to'
         )
