@@ -98,7 +98,9 @@ pipeline {
 
         // CD Ended
 
-        post {
+    }
+
+    post {
             always {
                 echo "${env.BUILD_ID}"
                 echo "${BRANCH_NAME}"
@@ -113,5 +115,4 @@ pipeline {
                 echo "Aborted"
             }
         }
-    }
 }
