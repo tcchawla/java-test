@@ -43,7 +43,7 @@ pipeline {
             steps {
                 echo 'Push'
 
-                sh "aws s3 cp target/sample-1.0.3.jar s3://bermtecbatch31"
+                // sh "aws s3 cp target/sample-1.0.3.jar s3://bermtecbatch31"
             }
         }
 
@@ -57,7 +57,7 @@ pipeline {
                     steps {
                         echo 'Build'
 
-                        sh "aws lambda update-function-code --function-name $function_name --region us-east-1 --s3-bucket bermtecbatch31 --s3-key sample-1.0.3.jar"
+                        // sh "aws lambda update-function-code --function-name $function_name --region us-east-1 --s3-bucket bermtecbatch31 --s3-key sample-1.0.3.jar"
                     }
                 }
 
@@ -68,7 +68,7 @@ pipeline {
                     steps {
                         echo 'Build'
 
-                        sh "aws lambda update-function-code --function-name $function_name --region us-east-1 --s3-bucket bermtecbatch31 --s3-key sample-1.0.3.jar"
+                        // sh "aws lambda update-function-code --function-name $function_name --region us-east-1 --s3-bucket bermtecbatch31 --s3-key sample-1.0.3.jar"
                     }
                 }
             }
@@ -79,12 +79,39 @@ pipeline {
                 branch "main"
             }
             steps {
-                echo 'Build'
+                echo 'Deploying to Prod'
+                input (
+                    message: "Are we good for Prod Deployment?"
+                )
+            }
+        }
 
-                sh "aws lambda update-function-code --function-name $function_name --region us-east-1 --s3-bucket bermtecbatch31 --s3-key sample-1.0.3.jar"
+        stage ('Release to Prod') {
+            when {
+                branch "main"
+            }
+            steps {
+                echo "Release to Prod"
+                // sh "aws lambda update-function-code --function-name $function_name --region us-east-1 --s3-bucket bermtecbatch31 --s3-key sample-1.0.3.jar"
             }
         }
 
         // CD Ended
+
+        post {
+            always {
+                echo "${env.BUILD_ID}"
+                echo "${BRANCH_NAME}"
+                echo "${BUILD_NUMBER}"
+                echo "${JENKINS_URL}"
+            }
+            failue {
+                echo "Failed to execute"
+                mail(to:"tc.chawla2000@gmail.com", body:"This build failed. Please try again", subject:"Build Failure")
+            }
+            aborted {
+                echo "Aborted"
+            }
+        }
     }
 }
